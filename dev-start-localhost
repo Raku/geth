@@ -1,0 +1,2 @@
+#!/bin/sh
+GETH_IRC_HOST=localhost GETH_DEBUG=1 perl6 bin/geth.p6
