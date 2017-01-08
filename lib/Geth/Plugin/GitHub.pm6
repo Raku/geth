@@ -85,7 +85,7 @@ sub make-full-commit-message ($c, $e) {
     my $review = Δ :style<bold>,
         "review: https://github.com/$e.repo-full()/commit/$c.sha.substr(0, 10)";
 
-    prefix-lines $e.repo ~ ("/$c.branch()" unless $c.branch eq 'master'|'nom'),
+    prefix-lines $e.repo ~ ("/$c.branch()" unless $c.branch eq 'master'),
         $header, $message, $review;
 }
 
