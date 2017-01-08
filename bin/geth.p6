@@ -9,6 +9,14 @@ use IRC::Client;
 use Geth::Config;
 use Geth::Plugin::GitHub;
 
+class Geth::Plugin::Info {
+    multi method irc-to-me ($ where /^ \s* ['help' | 'source' ] '?'? \s* $/) {
+        "Source at https://github.com/zoffixznet/geth "
+        ~ "To add repo, add an 'application/json' webhook on GitHub "
+        ~ "pointing it to http://geth.perl6.party/?chan=#perl6";
+    }
+}
+
 .run with IRC::Client.new:
     :debug,
     :nick(conf<nick>),
@@ -20,4 +28,5 @@ use Geth::Plugin::GitHub;
             :host(conf<hooks-listen-host>),
             :port(conf<hooks-listen-port>),
         ),
+        Geth::Plugin::Info.new,
     );
