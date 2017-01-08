@@ -11,21 +11,24 @@ has $!supplier = Supplier.new;
 has $.Supply   = $!supplier.Supply;
 
 submethod TWEAK {
-    start HTTP::Server::Tiny.new(:$!host , :$!port).run: -> $env {
-        my $data = $env<p6sgi.input>.slurp-rest;
-        # say "ENV $env.perl()" if $!debug;
-        say "-" x 100;
-        say "Got $data" if $!debug;
-        say "-" x 100;
-        my $decoded-data = (try from-json $data)
-            // %( error => "Failed to decode data: $!" );
-        $!supplier.emit: $_ for make-event(
-            $decoded-data,
-            :event($env<HTTP_X_GITHUB_EVENT>),
-            :query($env<QUERY_STRING>),
-        );
-        200, ['Content-Type' => 'text/plain'], [ 'OK' ]
-    };
+    start {
+        HTTP::Server::Tiny.new(:$!host , :$!port).run: -> $env {
+            my $data = $env<p6sgi.input>.slurp-rest;
+            # say "ENV $env.perl()" if $!debug;
+            say "-" x 100;
+            say "Got $data" if $!debug;
+            say "-" x 100;
+            my $decoded-data = (try from-json $data)
+                // %( error => "Failed to decode data: $!" );
+            $!supplier.emit: $_ for make-event(
+                $decoded-data,
+                :event($env<HTTP_X_GITHUB_EVENT>),
+                :query($env<QUERY_STRING>),
+            );
+            200, ['Content-Type' => 'text/plain'], [ 'OK' ]
+        };
+        CATCH { default { .gist.say } }
+    }
 }
 
 class Event {
