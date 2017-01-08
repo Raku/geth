@@ -14,7 +14,9 @@ submethod TWEAK {
     start HTTP::Server::Tiny.new(:$!host , :$!port).run: -> $env {
         my $data = $env<p6sgi.input>.slurp-rest;
         # say "ENV $env.perl()" if $!debug;
+        say "-" x 100;
         say "Got $data" if $!debug;
+        say "-" x 100;
         my $decoded-data = (try from-json $data)
             // %( error => "Failed to decode data: $!" );
         $!supplier.emit: $_ for make-event(
@@ -50,19 +52,28 @@ class Event::Push is Event {
     }
 }
 
+class Event::PullRequest is Event {
+    has $.number;
+    has $.url;
+    has $.title;
+    has $.sender;
+}
 
 sub make-event ($e, :$event, :$query) {
-    gather { given $event {
-        when 'push' {
-            take Event::Push.new:
-                repo      => $e<repository><name>,
-                repo-full => $e<repository><full_name>,
-                stars     => $e<repository><stargazers_count>,
-                issues    => $e<repository><open_issues_count>,
-                query     => $query.split(/<[=&]>/).map(*.&uri_decode).Hash,
-                pusher    => $e<pusher><name>,
+    my %basics =
+        repo      => $e<repository><name>,
+        repo-full => $e<repository><full_name>,
+        stars     => $e<repository><stargazers_count>,
+        issues    => $e<repository><open_issues_count>,
+        query     => $query.split(/<[=&]>/).map(*.&uri_decode).Hash,
+    ;
 
-                commits   => do for |$e<commits> -> $commit {
+    given $event {
+        when 'push' {
+            Event::Push.new:
+                |%basics,
+                pusher  => $e<pusher><name>,
+                commits => $e<commits>.map: -> $commit {
                     Event::Push::Commit.new:
                         sha       => $commit<id>,
                         branch    => $e<ref>.subst(/^'refs/heads/'/, ''),
@@ -77,8 +88,21 @@ sub make-event ($e, :$event, :$query) {
                         ]
                 };
         }
-        default {
-            say "Got `$event` event";
+        when $event eq 'pull_request' and $e.<action> eq 'opened' {
+            Event::PullRequest.new:
+                |%basics,
+                sender => $e<sender><login>,
+                number => $e<pull_request><number>,
+                url    => $e<pull_request><html_url>,
+                title  => $e<pull_request><title>,
+            ;
         }
-    }}
+        default {
+            say "-" x 100;
+            say "Got `$event` event";
+            dd [$query, $e];
+            say "-" x 100;
+            return;
+        }
+    }
 }

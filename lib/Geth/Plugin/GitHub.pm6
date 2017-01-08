@@ -57,6 +57,12 @@ sub make-text ($e) {
             join "\n", flat $e.commits.map: *.&make-full-commit-message: $e;
         }
     }
+    when $e ~~ Geth::GitHub::Hooks::Event::PullRequest {
+        prefix-lines $e.repo,
+            "&karma-name($e.sender) created pull request #$e.number(): "
+            ~ Δ(:style<bold>, $e.title),
+            Δ :style<bold>, "review: $e.url()";
+    }
 }
 
 sub make-short-commit-message ($c, $e) {
