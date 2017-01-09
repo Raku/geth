@@ -44,15 +44,15 @@ sub throttle (&code) {
 
     if now - $throttle < THROTTLE_COOLDOWN {
         if $sent-lines++ > THROTTLE_LINES_UNTHROTTLED_MAX {
-            dd ["Throttle sleeping for " ~ THROTTLE_SLEEP];
+            # dd ["Throttle sleeping for " ~ THROTTLE_SLEEP];
             sleep THROTTLE_SLEEP;
         }
-        else {
-            dd ["Throttle: too fast send, but few lines ($sent-lines)"];
-        }
+        # else {
+            # dd ["Throttle: too fast send, but few lines ($sent-lines)"];
+        # }
     }
     else {
-        dd ["Throttle: resetting throttle state"];
+        # dd ["Throttle: resetting throttle state"];
         $sent-lines = 0;  # we're past the cooldown; reset line counter
     }
     $throttle = now;
