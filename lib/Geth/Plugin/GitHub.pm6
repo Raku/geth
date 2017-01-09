@@ -8,6 +8,9 @@ has $.host is required;
 has $.port is required;
 
 constant &Δ = &irc-style-text;
+constant THROTTLE_LINES_UNTHROTTLED_MAX = 10;
+constant THROTTLE_SLEEP    = 1;
+constant THROTTLE_COOLDOWN = 5;
 
 method irc-started {
     start react {
@@ -24,13 +27,32 @@ method irc-started {
             if @chans ⊆ @bot-chans {
                 my $text = make-text $e;
                 for @chans -> $where {
-                    $.irc.send: :$where, :text($_) for $text.lines;
+                    for $text.lines -> $text {
+                        throttle { $.irc.send: :$where, :$text }
+                    }
                 }
             }
 
             CATCH { default { .gist.say } }
         }
     }
+}
+
+sub throttle (&code) {
+    state $throttle   = INIT now;
+    state $sent-lines = 0;
+
+    if now - $throttle < THROTTLE_COOLDOWN {
+        if $sent-lines++ > THROTTLE_LINES_UNTHROTTLED_MAX {
+            sleep THROTTLE_SLEEP;
+        }
+    }
+    else {
+        $sent-lines = 0;  # we're past the cooldown; reset line counter
+    }
+    $throttle = now;
+
+    code();
 }
 
 sub make-text ($e) {
