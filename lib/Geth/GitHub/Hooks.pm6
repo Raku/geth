@@ -63,12 +63,15 @@ class Event::PullRequest is Event {
 }
 
 sub make-event ($e, :$event, :$query) {
+    dd ['zzz', $query ?? $query.split(/<[=&]>/).map(*.&uri_decode).Hash !! %()];
     my %basics =
         repo      => $e<repository><name>,
         repo-full => $e<repository><full_name>,
         stars     => $e<repository><stargazers_count>,
         issues    => $e<repository><open_issues_count>,
-        query     => $query.split(/<[=&]>/).map(*.&uri_decode).Hash,
+        query     => (
+            $query ?? $query.split(/<[=&]>/).map(*.&uri_decode).Hash !! %()
+        ),
     ;
 
     given $event {
