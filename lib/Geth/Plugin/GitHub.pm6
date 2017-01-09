@@ -8,7 +8,7 @@ has $.host is required;
 has $.port is required;
 
 constant &Δ = &irc-style-text;
-constant THROTTLE_LINES_UNTHROTTLED_MAX = 6;
+constant THROTTLE_LINES_UNTHROTTLED_MAX = 5;
 constant THROTTLE_SLEEP    = 2;
 constant THROTTLE_COOLDOWN = 8;
 
