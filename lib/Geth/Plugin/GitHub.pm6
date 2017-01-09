@@ -8,7 +8,7 @@ has $.host is required;
 has $.port is required;
 
 constant &Δ = &irc-style-text;
-constant THROTTLE_LINES_UNTHROTTLED_MAX = 10;
+constant THROTTLE_LINES_UNTHROTTLED_MAX = 7;
 constant THROTTLE_SLEEP    = 1;
 constant THROTTLE_COOLDOWN = 5;
 
@@ -44,10 +44,15 @@ sub throttle (&code) {
 
     if now - $throttle < THROTTLE_COOLDOWN {
         if $sent-lines++ > THROTTLE_LINES_UNTHROTTLED_MAX {
+            dd ["Throttle sleeping for " ~ THROTTLE_SLEEP];
             sleep THROTTLE_SLEEP;
+        }
+        else {
+            dd ["Throttle: too fast send, but few lines ($sent-lines)"];
         }
     }
     else {
+        dd ["Throttle: resetting throttle state"];
         $sent-lines = 0;  # we're past the cooldown; reset line counter
     }
     $throttle = now;
