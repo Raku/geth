@@ -8,9 +8,9 @@ has $.host is required;
 has $.port is required;
 
 constant &Δ = &irc-style-text;
-constant THROTTLE_LINES_UNTHROTTLED_MAX = 7;
-constant THROTTLE_SLEEP    = 1;
-constant THROTTLE_COOLDOWN = 5;
+constant THROTTLE_LINES_UNTHROTTLED_MAX = 6;
+constant THROTTLE_SLEEP    = 2;
+constant THROTTLE_COOLDOWN = 8;
 
 method irc-started {
     start react {
