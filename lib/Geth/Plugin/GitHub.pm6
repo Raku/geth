@@ -77,7 +77,7 @@ sub make-text ($e) {
                 ),
                 Δ :style<bold>,
                     "review: https://github.com/$e.repo-full()/compare/"
-                    ~ $e.commits[ 0 ].sha.substr(0,10) ~ '…'
+                    ~ $e.commits[ 0 ].sha.substr(0,10) ~ '...'
                     ~ $e.commits[*-1].sha.substr(0,10);
         }
         else {
