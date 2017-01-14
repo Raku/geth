@@ -11,9 +11,10 @@ use Geth::Plugin::GitHub;
 
 class Geth::Plugin::Info {
     multi method irc-to-me ($ where /^ \s* ['help' | 'source' ] '?'? \s* $/) {
-        "Source at https://github.com/zoffixznet/geth "
+        "Source at https://github.com/perl6/geth "
         ~ "To add repo, add an 'application/json' webhook on GitHub "
-        ~ "pointing it to http://geth.perl6.party/?chan=#perl6";
+        ~ "pointing it to http://geth.perl6.party/?chan=#perl6 and choose "
+        ~ "'Send me everything' for events to send";
     }
 }
 
