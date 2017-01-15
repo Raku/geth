@@ -1,5 +1,7 @@
 unit class Geth::GitHub::Hooks;
 
+use Geth::GitHub::Hooks::Preprocessor;
+
 use HTTP::Server::Tiny;
 use JSON::Tiny;
 use URI::Encode;
@@ -48,6 +50,7 @@ class Event {
     has $.stars;
     has $.issues;
     has %.query;
+    has $.meta;
 }
 
 class Event::Push is Event {
@@ -76,12 +79,13 @@ class Event::PullRequest is Event {
 }
 
 sub make-event ($e, :$event, :$query) {
-    dd ['zzz', $query ?? $query.split(/<[=&]>/).map(*.&uri_decode).Hash !! %()];
+    Geth::GitHub::Hooks::Preprocessor.new.preprocess($e, :$event);
     my %basics =
         repo      => $e<repository><name>,
         repo-full => $e<repository><full_name>,
         stars     => $e<repository><stargazers_count>,
         issues    => $e<repository><open_issues_count>,
+        meta      => $e<geth-meta> || {},
         query     => (
             $query ?? $query.split(/<[=&]>/).map(*.&uri_decode).Hash !! %()
         ),

@@ -75,10 +75,15 @@ sub make-text ($e) {
                     $e.commits.map: *.&make-short-commit-message: $e
                         if $e.commits.elems < 10
                 ),
-                Δ :style<bold>,
+                Δ(:style<bold>,
                     "review: https://github.com/$e.repo-full()/compare/"
                     ~ $e.sha-before.substr(0,10) ~ '...'
-                    ~ $e.sha-after .substr(0,10);
+                    ~ $e.sha-after .substr(0,10)
+                ),
+                (
+                    "version bump brought these changes: &Δ(:style<bold>, $_)"
+                    with $e.meta<ver-bump>
+                );
         }
         else {
             join "\n", flat $e.commits.map: *.&make-full-commit-message: $e;
@@ -113,7 +118,10 @@ sub make-full-commit-message ($c, $e) {
         "review: https://github.com/$e.repo-full()/commit/$c.sha.substr(0, 10)";
 
     prefix-lines $e.repo ~ ("/$c.branch()" unless $c.branch eq 'master'),
-        $header, $message, $review;
+        $header, $message, $review, (
+            "version bump brought these changes: &Δ(:style<bold>, $_)"
+            with $e.meta<ver-bump>
+        );
 }
 
 sub karma-name {
