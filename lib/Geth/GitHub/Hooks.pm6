@@ -52,6 +52,8 @@ class Event {
 
 class Event::Push is Event {
     has $.pusher;
+    has $.sha-before;
+    has $.sha-after;
     has @.commits;
 
     class Commit {
@@ -89,8 +91,10 @@ sub make-event ($e, :$event, :$query) {
         when 'push' {
             Event::Push.new:
                 |%basics,
-                pusher  => $e<pusher><name>,
-                commits => $e<commits>.map: -> $commit {
+                pusher     => $e<pusher><name>,
+                sha-before => $e<before>,
+                sha-after  => $e<after>,
+                commits    => $e<commits>.map: -> $commit {
                     Event::Push::Commit.new:
                         sha       => $commit<id>,
                         branch    => $e<ref>.subst(/^'refs/heads/'/, ''),

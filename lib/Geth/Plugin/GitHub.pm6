@@ -77,8 +77,8 @@ sub make-text ($e) {
                 ),
                 Δ :style<bold>,
                     "review: https://github.com/$e.repo-full()/compare/"
-                    ~ $e.commits[ 0 ].sha.substr(0,10) ~ '...'
-                    ~ $e.commits[*-1].sha.substr(0,10);
+                    ~ $e.sha-before.substr(0,10) ~ '...'
+                    ~ $e.sha-after .substr(0,10);
         }
         else {
             join "\n", flat $e.commits.map: *.&make-full-commit-message: $e;
