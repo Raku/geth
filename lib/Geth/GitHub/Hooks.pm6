@@ -10,9 +10,19 @@ has $.host = '0.0.0.0';
 has $!supplier = Supplier.new;
 has $.Supply   = $!supplier.Supply;
 
+constant $OK_RES      = (200, ['Content-Type' => 'text/plain'], [ 'OK'      ]);
+constant $IGNORED_RES = (200, ['Content-Type' => 'text/plain'], [ 'Ignored' ]);
+constant @SUPPORTED_EVENTS = <push  pull_request>;
+
 submethod TWEAK {
     start {
-        HTTP::Server::Tiny.new(:$!host , :$!port).run: -> $env {
+        HTTP::Server::Tiny.new(:$!host , :$!port).run: sub ($env) {
+            unless $env<HTTP_X_GITHUB_EVENT> ∈ @SUPPORTED_EVENTS {
+                say "{DateTime.now} Ignoring unsupported event "
+                    ~ "`{$env<HTTP_X_GITHUB_EVENT>//''}`";
+                return $IGNORED_RES;
+            }
+
             my $data = $env<p6sgi.input>.slurp-rest;
             # say "ENV $env.perl()" if $!debug;
             say "-" x 100;
@@ -25,7 +35,8 @@ submethod TWEAK {
                 :event($env<HTTP_X_GITHUB_EVENT>),
                 :query($env<QUERY_STRING>),
             );
-            200, ['Content-Type' => 'text/plain'], [ 'OK' ]
+
+            $OK_RES;
         };
         CATCH { default { .gist.say } }
     }
