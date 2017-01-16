@@ -31,9 +31,24 @@ method nqp-version-bump ($json) {
         and .<modified>[0] eq 'tools/build/NQP_REVISION'
     } or return;
 
-    given $!ua.get("$RAKUDO_API_URL/commits/$commit<id>") {
+    self.fetch-version-bump: "$RAKUDO_API_URL/commits/$commit<id>", $NQP_URL
+        andthen $json<geth-meta><ver-bump> = $_;
+}
+
+method moar-version-bump ($json) {
+    my $commit = $json<commits>.first: {
+        .<added> + .<removed> == 0 and .<modified> == 1
+        and .<modified>[0] eq 'tools/build/MOAR_REVISION'
+    } or return;
+
+    self.fetch-version-bump: "$NQP_API_URL/commits/$commit<id>", $MOAR_URL
+        andthen $json<geth-meta><ver-bump> = $_;
+}
+
+method fetch-version-bump ($commit-url, $compare-url-part) {
+    given $!ua.get($commit-url) {
         unless .is-success {
-            say "Failed to fetch Rakudo commit via API: "
+            say "Failed to fetch $commit-url via API: "
                 ~ .status-line ~ .content;
             return;
         }
@@ -43,29 +58,6 @@ method nqp-version-bump ($json) {
             from-json(.content)<files>[0]<patch>;
         };
 
-        $json<geth-meta><ver-bump> = "$NQP_URL/compare/"
-            ~ $patch.lines[1,2]».substr(1).join('...');
-    }
-}
-
-method moar-version-bump ($json) {
-    my $commit = $json<commits>.first: {
-        .<added> + .<removed> == 0 and .<modified> == 1
-        and .<modified>[0] eq 'tools/build/MOAR_REVISION'
-    } or return;
-
-    given $!ua.get("$NQP_API_URL/commits/$commit<id>") {
-        unless .is-success {
-            say "Failed to fetch NQP commit via API: {.status-line ~ .content}";
-            return;
-        }
-
-        my $patch = try {
-            CATCH { say "Failed to decode API JSON: $!"; return; }
-            from-json(.content)<files>[0]<patch>;
-        };
-
-        $json<geth-meta><ver-bump> = "$MOAR_URL/compare/"
-            ~ $patch.lines[1,2]».substr(1).join('...');
+        "$compare-url-part/compare/" ~ $patch.lines[1,2]».substr(1).join('...');
     }
 }
