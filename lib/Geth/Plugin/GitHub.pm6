@@ -4,6 +4,8 @@ unit class Geth::Plugin::GitHub is IRC::Client::Plugin;
 use IRC::TextColor;
 use Geth::Config;
 use Geth::GitHub::Hooks;
+use Geth::GitHub::Hooks::Preprocessor;
+
 has $.host is required;
 has $.port is required;
 
@@ -11,6 +13,23 @@ constant &Δ = &irc-style-text;
 constant THROTTLE_LINES_UNTHROTTLED_MAX = 5;
 constant THROTTLE_SLEEP    = 2;
 constant THROTTLE_COOLDOWN = 8;
+constant $NQP_API_URL    = 'https://api.github.com/repos/perl6/nqp';
+constant $RAKUDO_API_URL = 'https://api.github.com/repos/rakudo/rakudo';
+constant $NQP_URL        = 'https://github.com/perl6/nqp';
+constant $MOAR_URL       = 'https://github.com/MoarVM/MoarVM';
+
+method irc-to-me (
+    $ where /^ 'ver' \s+ 'https://github.com/' <-[/]>+ '/'
+        $<repo>=<-[/]>+ '/commit/' $<sha>=\S+ $/
+) {
+    Geth::GitHub::Hooks::Preprocessor.new.fetch-version-bump: |(
+        $<repo> eq 'rakudo'
+            ?? ("$RAKUDO_API_URL/commits/$<sha>", $NQP_URL)
+            !! ("$NQP_API_URL/commits/$<sha>",   $MOAR_URL)
+    )
+    andthen "version bump brought in these changes: $_"
+    orelse "Failed to fetch version bump info because reasons";
+}
 
 method irc-started {
     start react {
