@@ -43,9 +43,9 @@ method irc-started {
 
             dd [ 'chans', @chans, @bot-chans, @chans ⊆ @bot-chans ];
 
-            if @chans ⊆ @bot-chans {
+            if keys @chans ∩ @bot-chans -> @send-to-chans {
                 my $text = make-text $e;
-                for @chans -> $where {
+                for @send-to-chans -> $where {
                     for $text.lines -> $text {
                         throttle { $.irc.send: :$where, :$text }
                     }
