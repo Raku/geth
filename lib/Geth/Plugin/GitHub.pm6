@@ -89,8 +89,9 @@ sub make-text ($e) {
                     !! '{' ~ @branches.join(',') ~ '}'
                 ),
                 Δ(:style<bold>, "$e.commits.elems() commits ")
-                ~ "pushed by &karma-name($e.pusher)",
-                (
+                ~ "pushed by " ~(
+                    $e.commits».author.unique».&karma-name.join(", ").substr(0,1000)
+                ), (
                     $e.commits.map: *.&make-short-commit-message: $e
                         if $e.commits.elems < 10
                 ),
