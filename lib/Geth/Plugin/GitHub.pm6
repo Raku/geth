@@ -149,5 +149,5 @@ sub karma-name {
 }
 
 sub prefix-lines ($pref, *@text) {
-    join "\n", map {" $pref: $_"}, @text.join("\n").lines;
+    join "\n", map {"¦ $pref: $_"}, @text.join("\n").lines;
 }
