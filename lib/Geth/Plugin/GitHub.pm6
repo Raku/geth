@@ -130,7 +130,7 @@ sub make-full-commit-message ($c, $e) {
     if $c.message.lines.elems -> $n {
         $message ~= "\n\n" ~ ($n < 10 ?? $c.message !! (
             join "\n", flat $c.message.lines[^5],
-                Δ :style<italic>, "<…commit message has {$n - 5} more lines…>";
+                Δ :style<bold>, "<…commit message has {$n - 5} more lines…>";
         ));
     }
 
