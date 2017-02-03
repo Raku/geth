@@ -118,7 +118,7 @@ sub make-text ($e) {
 }
 
 sub make-short-commit-message ($c, $e) {
-    "$c.sha.substr(0, 10) | &Δ(:style<bold>, $c.title)…"
+    "$c.sha.substr(0, 10) | &Δ(:style<bold>, $c.title)"
 }
 
 sub make-full-commit-message ($c, $e) {
