@@ -104,7 +104,7 @@ sub make-event ($e, :$event, :$query) {
                         author    => $commit<author><name>,
                         committer => $commit<committer><name>,
                         title     => $commit<message>.lines.head,
-                        message   => $commit<message>.lines[2..*].join("\n"),
+                        message   => $commit<message>.lines[1..*].join("\n").trim,
                         files     => [ sort unique
                             |$commit<modified>, |$commit<added>,
                             |$commit<removed>
