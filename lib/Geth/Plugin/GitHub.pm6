@@ -123,9 +123,7 @@ sub make-short-commit-message ($c, $e) {
 
 sub make-full-commit-message ($c, $e) {
     my $header = $c.sha.substr(0, 10) ~ ' | '
-        ~ karma-name($c.author)
-        ~ (" (committed by $c.committer())" if $c.author ne $c.committer)
-        ~ ' | '
+        ~ karma-name($c.author) ~ committer-name($c) ~ ' | '
         ~ ($c.files == 1 ?? |$c.files !! "$c.files.elems() files");
 
     my $message = Δ(:style<bold>, $c.title);
@@ -144,6 +142,12 @@ sub make-full-commit-message ($c, $e) {
             "version bump brought these changes: &Δ(:style<bold>, $_)"
             with $e.meta<ver-bump>
         );
+}
+
+sub committer-name ($c) {
+    return ''                           if $c.committer eq $c.author;
+    return ' (using GitHub Web editor)' if $c.committer eq 'GitHub';
+    " (committed by $c.committer())"
 }
 
 sub karma-name {
