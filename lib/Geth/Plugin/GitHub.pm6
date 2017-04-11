@@ -148,7 +148,7 @@ sub committer-name ($c) {
     with $c.committer {
         when $c.author { '' }
         when 'GitHub'  { ' (committed using GitHub Web editor)' }
-        " (committed by $c.committer())"
+        " (committed by $_)"
     }
 }
 
