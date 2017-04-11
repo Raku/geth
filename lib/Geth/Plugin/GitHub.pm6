@@ -145,9 +145,11 @@ sub make-full-commit-message ($c, $e) {
 }
 
 sub committer-name ($c) {
-    return ''                           if $c.committer eq $c.author;
-    return ' (using GitHub Web editor)' if $c.committer eq 'GitHub';
-    " (committed by $c.committer())"
+    with $c.committer {
+        when $c.author { '' }
+        when 'GitHub'  { ' (committed using GitHub Web editor)' }
+        " (committed by $c.committer())"
+    }
 }
 
 sub karma-name {
