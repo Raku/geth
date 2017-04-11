@@ -123,7 +123,9 @@ sub make-short-commit-message ($c, $e) {
 
 sub make-full-commit-message ($c, $e) {
     my $header = $c.sha.substr(0, 10) ~ ' | '
-        ~ karma-name($c.author) ~ ' | '
+        ~ karma-name($c.author)
+        ~ (" (committed by $c.committer())" if $c.author ne $c.committer)
+        ~ ' | '
         ~ ($c.files == 1 ?? |$c.files !! "$c.files.elems() files");
 
     my $message = Δ(:style<bold>, $c.title);
