@@ -18,7 +18,7 @@ constant $RAKUDO_API_URL = 'https://api.github.com/repos/rakudo/rakudo';
 constant $NQP_URL        = 'https://github.com/perl6/nqp';
 constant $MOAR_URL       = 'https://github.com/MoarVM/MoarVM';
 
-my @COMMIT-FILTERS where .all ~~ Callable && .all.count == 1 && .all.name.so
+my @COMMIT-FILTERS where .all ~~ Callable && .all.count == 1 && .all.name
 = dir("commit-filters", test => *.ends-with: ".pm6").map: *.&EVALFILE
     andthen say "Loaded {+$_} commit filters";
 
