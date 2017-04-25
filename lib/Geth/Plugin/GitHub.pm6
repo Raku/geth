@@ -48,7 +48,7 @@ method irc-started {
             dd [ 'chans', @chans, @bot-chans, @chans ⊆ @bot-chans ];
 
             if keys @chans ∩ @bot-chans -> @send-to-chans {
-                my $text = make-text $e;
+                my $text = make-text $e or next;
                 for @send-to-chans -> $where {
                     for $text.lines -> $text {
                         throttle { $.irc.send: :$where, :$text }
@@ -85,10 +85,9 @@ sub throttle (&code) {
 
 sub make-text ($e) {
     for @COMMIT-FILTERS -> &filter {
-        if filter $e -> $res {
-            say "Matched filter &filter.name()";
-            return $res;
-        }
+        my $res = filter $e orelse next;
+        say "Matched filter &filter.name()";
+        return $res;
     }
 
     when $e ~~ Geth::GitHub::Hooks::Event::Push {
