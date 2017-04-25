@@ -18,6 +18,10 @@ constant $RAKUDO_API_URL = 'https://api.github.com/repos/rakudo/rakudo';
 constant $NQP_URL        = 'https://github.com/perl6/nqp';
 constant $MOAR_URL       = 'https://github.com/MoarVM/MoarVM';
 
+my @COMMIT-FILTERS where .all ~~ Callable && .all.count == 1 && .all.name.so
+= dir("commit-filters", test => *.ends-with: ".pm6").map: *.&EVALFILE
+    andthen say "Loaded {+$_} commit filters";
+
 method irc-to-me (
     $ where /^ 'ver' \s+ 'https://github.com/' <-[/]>+ '/'
         $<repo>=<-[/]>+ '/commit/' $<sha>=\S+ $/
@@ -80,6 +84,13 @@ sub throttle (&code) {
 }
 
 sub make-text ($e) {
+    for @COMMIT-FILTERS -> &filter {
+        if filter $e -> $res {
+            say "Matched filter &filter.name()";
+            return $res;
+        }
+    }
+
     when $e ~~ Geth::GitHub::Hooks::Event::Push {
         if $e.commits.elems > 3 {
             my @branches = $e.commits».branch.unique.sort;
