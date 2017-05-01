@@ -1,2 +1,2 @@
 #!/bin/sh
-screen -S geth perl6 bin/geth.p6
+screen -L -S geth perl6 bin/geth.p6
