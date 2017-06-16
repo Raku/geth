@@ -25,6 +25,11 @@ submethod TWEAK {
                 return $IGNORED_RES;
             }
 
+            # XXX TODO: Replace with stable server.
+            # If the line below is dying it's cause they're changing HTTP::Server::Tiny
+            # willy-nilly. Install an older version:
+            # zef --force --/test install https://github.com/tokuhirom/p6-HTTP-Server-Tiny/archive/26df561430699ab2b769c88cb0a68ec702554102.zip
+
             my $data = $env<p6sgi.input>.slurp-rest;
             # say "ENV $env.perl()" if $!debug;
             say "-" x 100;
