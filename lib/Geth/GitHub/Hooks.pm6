@@ -25,7 +25,7 @@ submethod TWEAK {
                 return $IGNORED_RES;
             }
 
-            my $data = $env<p6sgi.input>.slurp-rest;
+            my $data = $env<p6w.input>.slurp-rest;
             # say "ENV $env.perl()" if $!debug;
             say "-" x 100;
             say "Got $data" if $!debug;
