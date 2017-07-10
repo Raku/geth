@@ -1,0 +1,10 @@
+[Unit]
+Description=GitHub Push Updates to IRC Bot
+
+[Service]
+User=geth
+LimitDATA=536870912
+ExecStart=/usr/bin/perl6 bin/geth.p6
+Restart=always
+KillSignal=QUIT
+WorkingDirectory=/home/geth/geth
