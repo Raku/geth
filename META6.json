@@ -1,0 +1,32 @@
+{
+    "perl"         : "6.c",
+    "name"         : "Geth",
+    "license"      : "Artistic-2.0",
+    "version"      : "0.1",
+    "description"  : "GitHub Push Updates to IRC Bot",
+    "tags"         : [ "Net", "IRC" ],
+    "depends"      : [
+        "IRC::Client",
+        "IRC::TextColor",
+        "IO::Socket::SSL",
+        "JSON::Fast",
+        "JSON::Tiny",
+        "HTTP::Server::Tiny",
+        "HTTP::UserAgent",
+        "Number::Denominate",
+        "URI::Encode"
+    ],
+    "test-depends" : [
+        "Test",
+        "Test::When",
+        "Test::Notice"
+    ],
+    "provides"     : {
+        "Geth::Config" : "lib/Geth/Config.pm6",
+        "Geth::GitHub::Hooks": "lib/Geth/GitHub/Hooks.pm6",
+        "Geth::GitHub::Hooks::Preprocessor": "lib/Geth/GitHub/Hooks/Preprocessor.pm6",
+        "Geth::Plugin::GitHub": "lib/Geth/Plugin/GitHub.pm6"
+    },
+    "authors"       : ["Zoffix Znet"],
+    "support"       : {"source"   : "git://github.com/perl6/geth.git"}
+}
