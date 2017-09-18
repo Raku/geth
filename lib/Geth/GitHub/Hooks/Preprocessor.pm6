@@ -32,7 +32,7 @@ method nqp-version-bump ($json) {
     } or return;
 
     self.fetch-version-bump: "$RAKUDO_API_URL/commits/$commit<id>", $NQP_URL
-        andthen $json<geth-meta><ver-bump> = $_;
+        andthen $json<geth-meta><ver-bump>{$commit<sha>} = $_;
 }
 
 method moar-version-bump ($json) {
@@ -42,7 +42,7 @@ method moar-version-bump ($json) {
     } or return;
 
     self.fetch-version-bump: "$NQP_API_URL/commits/$commit<id>", $MOAR_URL
-        andthen $json<geth-meta><ver-bump> = $_;
+        andthen $json<geth-meta><ver-bump>{$commit<id>} = $_;
 }
 
 method fetch-version-bump ($commit-url, $compare-url-part) {

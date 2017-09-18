@@ -112,7 +112,7 @@ sub make-text ($e) {
                     ~ $e.sha-after .substr(0,10)
                 ),
                 (
-                    "version bump brought these changes: &Δ(:style<bold>, $_)"
+                    "version bump brought these changes: &Δ(:style<bold>, .values.head)"
                     with $e.meta<ver-bump>
                 );
         }
@@ -151,7 +151,7 @@ sub make-full-commit-message ($c, $e) {
     prefix-lines $e.repo ~ ("/$c.branch()" unless $c.branch eq 'master'),
         $header, $message, $review, (
             "version bump brought these changes: &Δ(:style<bold>, $_)"
-            with $e.meta<ver-bump>
+            with $e.meta<ver-bump>{$e.sha}
         );
 }
 
