@@ -151,7 +151,7 @@ sub make-full-commit-message ($c, $e) {
     prefix-lines $e.repo ~ ("/$c.branch()" unless $c.branch eq 'master'),
         $header, $message, $review, (
             "version bump brought these changes: &Δ(:style<bold>, $_)"
-            with $e.meta<ver-bump>{$e.sha}
+            with $e.meta<ver-bump>{$c.sha}
         );
 }
 
