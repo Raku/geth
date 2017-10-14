@@ -2,7 +2,7 @@
     "perl"         : "6.c",
     "name"         : "Geth",
     "license"      : "Artistic-2.0",
-    "version"      : "0.1",
+    "version"      : "1.001001",
     "description"  : "GitHub Push Updates to IRC Bot",
     "tags"         : [ "Net", "IRC" ],
     "depends"      : [
