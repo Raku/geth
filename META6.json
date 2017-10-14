@@ -16,11 +16,6 @@
         "Number::Denominate",
         "URI::Encode"
     ],
-    "test-depends" : [
-        "Test",
-        "Test::When",
-        "Test::Notice"
-    ],
     "provides"     : {
         "Geth::Config" : "lib/Geth/Config.pm6",
         "Geth::GitHub::Hooks": "lib/Geth/GitHub/Hooks.pm6",
