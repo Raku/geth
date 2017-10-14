@@ -39,7 +39,7 @@ method irc-to-me (
 method irc-started {
     start react {
         whenever Geth::GitHub::Hooks.new(:$!host, :$!port, :9debug) -> $e {
-            my @chans = $e.query<chan>.?split: ',';
+            my @chans = ($e.query<chan> // '').split: ',';
             my @bot-chans = |conf<channels>;
             # XXX TODO: https://github.com/zoffixznet/perl6-IRC-Client/issues/37
             # $.irc.servers».channels.flat.map({
