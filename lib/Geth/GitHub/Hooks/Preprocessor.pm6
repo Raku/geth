@@ -19,7 +19,7 @@ method preprocess ($json, :$event) {
                     and $json<repository><html_url> eq $NQP_URL;
 
             self.nqp-version-bump: $json
-                if  $json<ref> eq 'refs/heads/nom'
+                if  $json<ref> eq 'refs/heads/master'
                     and $json<repository><html_url> eq $RAKUDO_URL;
         }
     }
