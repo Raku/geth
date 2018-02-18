@@ -57,7 +57,9 @@ method fetch-version-bump ($commit-url, $compare-url-part) {
             CATCH { say "Failed to decode API JSON: $!"; return; }
             from-json(.content)<files>[0]<patch>;
         };
-
-        "$compare-url-part/compare/" ~ $patch.lines[1,2]».substr(1).join('...');
+        "$compare-url-part/compare/" ~ $patch.lines.map(
+            *.substr(1).words.head
+        ).grep(/^\d**4/) # exclude "No line at end of file" line
+        .join('...');
     }
 }
