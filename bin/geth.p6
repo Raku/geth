@@ -1,9 +1,6 @@
 #!/usr/bin/env perl6
 
-use lib <
-    /home/zoffix/services/lib/IRC-Client/lib
-    lib
->;
+use lib <lib>;
 
 use Number::Denominate;
 use IRC::Client;
