@@ -106,11 +106,7 @@ sub make-text ($e) {
                     $e.commits.map: *.&make-short-commit-message: $e
                         if $e.commits.elems < 10
                 ),
-                Δ(:style<bold>,
-                    "review: https://github.com/$e.repo-full()/compare/"
-                    ~ $e.sha-before.substr(0,10) ~ '...'
-                    ~ $e.sha-after .substr(0,10)
-                ),
+                Δ(:style<bold>, "review: $e.compare-url()"),
                 (
                     "version bump brought these changes: &Δ(:style<bold>, .values.head)"
                     with $e.meta<ver-bump>
