@@ -77,6 +77,21 @@ class Event::PullRequest is Event {
     has $.sender;
 }
 
+class Event::Issues::Assigned is Event {
+    has $.sender;
+    has $.assignee;
+    has $.url;
+    has $.title;
+    method self-self { $!sender eq $!assignee }
+}
+class Event::Issues::Unassigned is Event {
+    has $.sender;
+    has $.assignee;
+    has $.url;
+    has $.title;
+    method self-self { $!sender eq $!assignee }
+}
+
 sub make-event ($e, :$event, :$query) {
     Geth::GitHub::Hooks::Preprocessor.new.preprocess($e, :$event);
     my %basics =
@@ -117,6 +132,22 @@ sub make-event ($e, :$event, :$query) {
                 number => $e<pull_request><number>,
                 url    => $e<pull_request><html_url>,
                 title  => $e<pull_request><title>,
+            ;
+        }
+        when $event eq 'issues' and $e.<action> eq 'assigned' {
+            Event::Issues::Assigned.new: |%basics,
+                by    => $e<sender><login>,
+                who   => $e<assignee><login>,
+                url   => $e<issue><html_url>,
+                title => $e<issue><title>,
+            ;
+        }
+        when $event eq 'issues' and $e.<action> eq 'unassigned' {
+            Event::Issues::Unassigned.new: |%basics,
+                sender   => $e<sender><login>,
+                assignee => $e<assignee><login>,
+                url      => $e<issue><html_url>,
+                title    => $e<issue><title>,
             ;
         }
         default {

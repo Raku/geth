@@ -122,6 +122,20 @@ sub make-text ($e) {
             ~ Δ(:style<bold>, $e.title),
             Δ :style<bold>, "review: $e.url()";
     }
+    when $e ~~ Geth::GitHub::Hooks::Event::Issues::Assigned {
+        prefix-lines $e.repo,
+            $e.self-self
+            ?? "$e.sender() self-assigned " ~ Δ(:style<bold>, $e.title)
+            !! "$e.sender() assigned " ~ Δ(:style<bold>, $e.title)
+                ~ " to " ~ Δ(:style<bold>, $e.assignee);
+    }
+    when $e ~~ Geth::GitHub::Hooks::Event::Issues::Unassigned {
+        prefix-lines $e.repo,
+            $e.self-self
+            ?? "$e.sender() self-unassigned " ~ Δ(:style<bold>, $e.title)
+            !! "$e.sender() unassigned " ~ Δ(:style<bold>, $e.title)
+                ~ " from " ~ Δ(:style<bold>, $e.assignee);
+    }
 }
 
 sub make-short-commit-message ($c, $e) {
