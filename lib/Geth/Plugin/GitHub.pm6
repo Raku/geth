@@ -128,7 +128,7 @@ sub make-text ($e) {
             ?? "$e.sender() self-assigned " ~ Δ(:style<bold>, $e.title)
                 ~ " $e.url()"
             !! "$e.sender() assigned to " ~ Δ(:style<bold>, $e.assignee)
-              " Issue " ~ Δ(:style<bold>, $e.title) ~ " $e.url()"
+                ~ " Issue " ~ Δ(:style<bold>, $e.title) ~ " $e.url()"
     }
     when $e ~~ Geth::GitHub::Hooks::Event::Issues::Unassigned {
         prefix-lines $e.repo,
@@ -136,7 +136,7 @@ sub make-text ($e) {
             ?? "$e.sender() self-unassigned " ~ Δ(:style<bold>, $e.title)
                 ~ " $e.url()"
             !! "$e.sender() unassigned from " ~ Δ(:style<bold>, $e.assignee)
-              " Issue " ~ Δ(:style<bold>, $e.title) ~ " $e.url()"
+                ~ " Issue " ~ Δ(:style<bold>, $e.title) ~ " $e.url()"
     }
 }
 
