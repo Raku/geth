@@ -14,7 +14,7 @@ has $.Supply   = $!supplier.Supply;
 
 constant $OK_RES      = (200, ['Content-Type' => 'text/plain'], [ 'OK'      ]);
 constant $IGNORED_RES = (200, ['Content-Type' => 'text/plain'], [ 'Ignored' ]);
-constant @SUPPORTED_EVENTS = <push  pull_request>;
+constant @SUPPORTED_EVENTS = <push  pull_request  issues>;
 
 submethod TWEAK {
     start {
