@@ -136,10 +136,10 @@ sub make-event ($e, :$event, :$query) {
         }
         when $event eq 'issues' and $e.<action> eq 'assigned' {
             Event::Issues::Assigned.new: |%basics,
-                by    => $e<sender><login>,
-                who   => $e<assignee><login>,
-                url   => $e<issue><html_url>,
-                title => $e<issue><title>,
+                sender   => $e<sender><login>,
+                assignee => $e<assignee><login>,
+                url      => $e<issue><html_url>,
+                title    => $e<issue><title>,
             ;
         }
         when $event eq 'issues' and $e.<action> eq 'unassigned' {
