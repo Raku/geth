@@ -26,7 +26,7 @@ submethod TWEAK {
             }
 
             say "ENV $env.perl()" if $!debug;
-            my $data = [~] $env<p6w.input>.List;                                                                                                                                                                                                               
+            my $data = [~] $env<p6w.input>.List;
             $data .= decode unless $data ~~ Str;
             say "-" x 100;
             say "Got $data" if $!debug;
