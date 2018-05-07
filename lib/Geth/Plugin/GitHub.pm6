@@ -93,6 +93,7 @@ sub make-text ($e) {
 
     when $e ~~ Geth::GitHub::Hooks::Event::Push {
         if $e.commits.elems > 3 {
+            my @authors  = $e.commits».author.unique».&karma-name;
             my @branches = $e.commits».branch.unique.sort;
             prefix-lines $e.repo ~ (
                     @branches == 1 ?? "/@branches[0]"
@@ -101,7 +102,9 @@ sub make-text ($e) {
                 ),
                 Δ(:style<bold>, "$e.commits.elems() commits ")
                 ~ "pushed by " ~(
-                    $e.commits».author.unique».&karma-name.join(", ").substr(0,1000)
+                    @authors > 6
+                        ?? "{+@authors} authors"
+                        !! @authors.join(", ").substr(0,1000)
                 ), (
                     $e.commits.map: *.&make-short-commit-message: $e
                         if $e.commits.elems < 10
