@@ -109,7 +109,7 @@ sub make-text ($e) {
                     $e.commits.map: *.&make-short-commit-message: $e
                         if $e.commits.elems < 10
                 ),
-                Δ(:style<bold>, "review: $e.compare-url()"),
+                Δ(:style<bold>, 'review:') ~ " $e.compare-url()",
                 (
                     "version bump brought these changes: &Δ(:style<bold>, .values.head)"
                     with $e.meta<ver-bump>
@@ -123,7 +123,7 @@ sub make-text ($e) {
         prefix-lines $e.repo,
             "&karma-name($e.sender) created pull request #$e.number(): "
             ~ Δ(:style<bold>, $e.title),
-            Δ :style<bold>, "review: $e.url()";
+            Δ(:style<bold>, 'review:') ~ " $e.url()";
     }
     when $e ~~ Geth::GitHub::Hooks::Event::Issues::Assigned {
         prefix-lines $e.repo,
@@ -160,8 +160,8 @@ sub make-full-commit-message ($c, $e) {
         ));
     }
 
-    my $review = Δ :style<bold>,
-        "review: https://github.com/$e.repo-full()/commit/$c.sha.substr(0, 10)";
+    my $review = Δ(:style<bold>, 'review:')
+        ~ " https://github.com/$e.repo-full()/commit/$c.sha.substr(0, 10)";
 
     prefix-lines $e.repo ~ ("/$c.branch()" unless $c.branch eq 'master'),
         $header, $message, $review, (
