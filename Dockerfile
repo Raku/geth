@@ -9,6 +9,6 @@ COPY bin bin
 COPY lib lib
 COPY commit-filters commit-filters
 
-RUN zef install --deps-only .
+RUN zef install --deps-only --/test .
 
 CMD [ "perl6", "bin/geth.p6" ]
