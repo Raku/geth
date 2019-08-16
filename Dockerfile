@@ -2,7 +2,7 @@ FROM registry.gitlab.com/tyil/docker-perl6:debian-latest
 
 WORKDIR /app
 
-RUN apt update && apt install -y curl libssl-dev
+RUN apt update && apt install -y curl git libssl-dev
 
 COPY META6.json META6.json
 COPY bin bin
