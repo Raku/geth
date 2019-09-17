@@ -5,6 +5,12 @@
     "nick": "Geth",
     "host": "irc.freenode.net",
     "channels": [
-        "#perl6", "#perl6-dev", "#perl6-toolchain", "#zofbot", "#moarvm", "#cro"
+        "#perl6",
+        "#perl6-dev",
+        "#perl6-toolchain",
+        "#perl6-macros",
+        "#zofbot",
+        "#moarvm",
+        "#cro"
     ]
 }
