@@ -8,7 +8,7 @@ can be restarted with:
 
     sudo service geth restart
 
-The webhook endpoint is `http://hack.p6c.org:8888/?chan=#perl6` where `#perl6`
+The webhook endpoint is `https://geth.svc.tyil.net/?chan=#perl6` where `#perl6`
 is the channel to report the commits to. Multiple channels can be specified,
 separated with commas.
 

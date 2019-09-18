@@ -11,7 +11,7 @@ class Geth::Plugin::Info {
     multi method irc-to-me ($ where /^ \s* ['help' | 'source' ] '?'? \s* $/) {
         "Source at https://github.com/perl6/geth "
         ~ "To add repo, add an 'application/json' webhook on GitHub "
-        ~ "pointing it to https://svc.tyil.net/?chan=%23perl6 and choose "
+        ~ "pointing it to https://geth.svc.tyil.net/?chan=%23perl6 and choose "
         ~ "'Send me everything' for events to send | use `ver URL to commit` "
         ~ "to fetch version bump changes";
     }
