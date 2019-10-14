@@ -7,6 +7,8 @@
     "channels": [
         "#perl6",
         "#perl6-dev",
+        "#raku",
+        "#raku-dev",
         "#perl6-toolchain",
         "#perl6-macros",
         "#zofbot",
