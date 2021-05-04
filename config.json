@@ -1,18 +1,13 @@
 {
     "hooks-listen-port": 8888,
     "hooks-listen-host": "0.0.0.0",
-
     "nick": "Geth",
     "host": "irc.freenode.net",
     "channels": [
-        "#perl6",
-        "#perl6-dev",
-        "#raku",
-        "#raku-dev",
-        "#perl6-toolchain",
-        "#perl6-macros",
-        "#zofbot",
+        "#cro",
         "#moarvm",
-        "#cro"
+        "#perl6-macros",
+        "#raku",
+        "#raku-dev"
     ]
 }

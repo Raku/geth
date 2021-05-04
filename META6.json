@@ -1,28 +1,36 @@
 {
-    "perl"         : "6.c",
-    "name"         : "Geth",
-    "license"      : "Artistic-2.0",
-    "version"      : "1.001001",
-    "description"  : "GitHub Push Updates to IRC Bot",
-    "tags"         : [ "Net", "IRC" ],
-    "depends"      : [
-        "HTTP::Server::Tiny",
-        "HTTP::UserAgent",
-        "IO::Socket::SSL",
-        "IRC::Client",
-        "IRC::TextColor",
-        "JSON::Fast",
-        "JSON::Tiny",
-        "Number::Denominate",
-        "URI::Encode",
-        "WWW"
-    ],
-    "provides"     : {
-        "Geth::Config" : "lib/Geth/Config.pm6",
-        "Geth::GitHub::Hooks": "lib/Geth/GitHub/Hooks.pm6",
-        "Geth::GitHub::Hooks::Preprocessor": "lib/Geth/GitHub/Hooks/Preprocessor.pm6",
-        "Geth::Plugin::GitHub": "lib/Geth/Plugin/GitHub.pm6"
-    },
-    "authors"       : ["Zoffix Znet"],
-    "support"       : {"source"   : "git://github.com/perl6/geth.git"}
+  "authors": [
+    "Zoffix Znet"
+  ],
+  "depends": [
+    "HTTP::Server::Tiny",
+    "HTTP::UserAgent",
+    "IO::Socket::SSL",
+    "IRC::Client:auth<cpan:TYIL>",
+    "IRC::TextColor",
+    "JSON::Fast",
+    "JSON::Tiny",
+    "Number::Denominate",
+    "URI::Encode",
+    "WWW",
+    "Log:auth<cpan:TYIL>"
+  ],
+  "description": "GitHub Push Updates to IRC Bot",
+  "license": "Artistic-2.0",
+  "name": "Geth",
+  "perl": "6.c",
+  "provides": {
+    "Geth::Config": "lib/Geth/Config.pm6",
+    "Geth::GitHub::Hooks": "lib/Geth/GitHub/Hooks.pm6",
+    "Geth::GitHub::Hooks::Preprocessor": "lib/Geth/GitHub/Hooks/Preprocessor.pm6",
+    "Geth::Plugin::GitHub": "lib/Geth/Plugin/GitHub.pm6"
+  },
+  "support": {
+    "source": "git://github.com/perl6/geth.git"
+  },
+  "tags": [
+    "Net",
+    "IRC"
+  ],
+  "version": "1.001001"
 }

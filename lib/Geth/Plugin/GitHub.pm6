@@ -1,6 +1,9 @@
 use IRC::Client;
+use IRC::Client::Plugin;
+
 unit class Geth::Plugin::GitHub is IRC::Client::Plugin;
 
+use Log;
 use IRC::TextColor;
 use Geth::Config;
 use Geth::GitHub::Hooks;
@@ -36,7 +39,7 @@ method irc-to-me (
     orelse "Failed to fetch version bump info because reasons";
 }
 
-method irc-started {
+method irc-started ($irc) {
     start react {
         whenever Geth::GitHub::Hooks.new(:$!host, :$!port, :9debug) -> $e {
             my @chans = ($e.query<chan> // '').split: ',';
@@ -47,18 +50,16 @@ method irc-started {
                 # $_ ~~ Pair ?? .key !! $_
             # });
 
-            dd [ 'chans', @chans, @bot-chans, @chans ⊆ @bot-chans ];
-
             if keys @chans ∩ @bot-chans -> @send-to-chans {
                 my $text = make-text $e or next;
                 for @send-to-chans -> $where {
                     for $text.lines -> $text {
-                        throttle { $.irc.send: :$where, :$text }
+                        throttle { $irc.privmsg($where, $text) }
                     }
                 }
             }
 
-            CATCH { default { .gist.say } }
+            CATCH { default { my $message = $_.gist; .alert($message) with $Log::instance; } }
         }
     }
 }
