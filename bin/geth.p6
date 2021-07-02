@@ -1,17 +1,13 @@
 #!/usr/bin/env perl6
 
+use lib <lib>;
+
 use Number::Denominate;
 use IRC::Client;
 use Geth::Config;
 use Geth::Plugin::GitHub;
-use Log:auth<cpan:TYIL>;
 
-if (%*ENV<RAKU_LOG_CLASS>:exists) {
-    $Log::instance = (require ::(%*ENV<RAKU_LOG_CLASS>)).new;
-    $Log::instance.add-output($*OUT, %*ENV<RAKU_LOG_LEVEL> // Log::Level::Info);
-}
-
-class Geth::Plugin::Info is IRC::Client::Plugin {
+class Geth::Plugin::Info {
     multi method irc-to-me ($ where /^ \s* ['help' | 'source' ] '?'? \s* $/) {
         "Source at https://github.com/perl6/geth "
         ~ "To add repo, add an 'application/json' webhook on GitHub "
@@ -21,20 +17,18 @@ class Geth::Plugin::Info is IRC::Client::Plugin {
     }
 }
 
-class Geth::Plugin::Uptime is IRC::Client::Plugin {
+class Geth::Plugin::Uptime {
     multi method irc-to-me ($ where /^ \s* 'uptime' '?'? \s* $/) {
         denominate now - INIT now;
     }
 }
 
-.info("Connecting to {conf<host>} as {conf<nick>}") with $Log::instance;
-
-my $client = IRC::Client.new(
+.run with IRC::Client.new:
     :debug,
-    :nicks([conf<nick>, 'geth_', 'geth__', 'geth___']),
+    :nick(conf<nick>),
     :username<zofbot-geth>,
     :host(%*ENV<GETH_IRC_HOST> // conf<host>),
-    :channels( |conf<channels> ),
+    :channels( %*ENV<GETH_DEBUG> ?? |('#zofbot', '#perl6') !! |conf<channels> ),
     :plugins(
         Geth::Plugin::GitHub.new(
             :host(conf<hooks-listen-host>),
@@ -42,12 +36,4 @@ my $client = IRC::Client.new(
         ),
         Geth::Plugin::Info.new,
         Geth::Plugin::Uptime.new,
-    )
-).start;
-
-react {
-	whenever signal(SIGINT) {
-		$client.stop;
-		exit(0);
-	}
-}
+    );

@@ -4,7 +4,6 @@ use Geth::GitHub::Hooks::Preprocessor;
 
 use HTTP::Server::Tiny;
 use JSON::Tiny;
-use Log:auth<cpan:TYIL>;
 use URI::Encode;
 
 has $.debug = False;
@@ -21,20 +20,19 @@ submethod TWEAK {
     start {
         HTTP::Server::Tiny.new(:$!host , :$!port).run: sub ($env) {
             unless $env<HTTP_X_GITHUB_EVENT> ∈ @SUPPORTED_EVENTS {
-                .warning("Ignoring unsupported {$env<HTTP_X_GITHUB_EVENT> // ''} event {$env<HTTP_X_GITHUB_DELIVERY> // ''}") with $Log::instance;
+                say "{DateTime.now} Ignoring unsupported event "
+                    ~ "`{$env<HTTP_X_GITHUB_EVENT>//''}`";
                 return $IGNORED_RES;
             }
 
-            .notice("Received $env<HTTP_X_GITHUB_EVENT> event $env<HTTP_X_GITHUB_DELIVERY>") with $Log::instance;
-
+            say "ENV $env.perl()" if $!debug;
             my $data = [~] $env<p6w.input>.List;
-
-            if ($data !~~ Str) {
-                $data .= decode;
-            }
-
-            my $decoded-data = (try from-json $data) // %( error => "Failed to decode data: $!" );
-
+            $data .= decode unless $data ~~ Str;
+            say "-" x 100;
+            say "Got $data" if $!debug;
+            say "-" x 100;
+            my $decoded-data = (try from-json $data)
+                // %( error => "Failed to decode data: $!" );
             $!supplier.emit: $_ for make-event(
                 $decoded-data,
                 :event($env<HTTP_X_GITHUB_EVENT>),
@@ -43,14 +41,7 @@ submethod TWEAK {
 
             $OK_RES;
         };
-
-        CATCH {
-            default {
-                my $error = $_.gist;
-
-                .critical($_) with $Log::instance;
-            }
-        }
+        CATCH { default { .gist.say } }
     }
 }
 
@@ -160,6 +151,10 @@ sub make-event ($e, :$event, :$query) {
             ;
         }
         default {
+            say "-" x 100;
+            say "Got `$event` event";
+            dd [$query, $e];
+            say "-" x 100;
             return;
         }
     }
